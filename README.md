@@ -1,4 +1,4 @@
-# Demographic-analysis-of-movie-preferences-by-age-and-gender
+# Demographic analysis of movie preferences by age and gender
 ## 1. 주제 선정 및 문제 정의
 관심분야: 영화
 핵심문제: 성별, 연령대별 영화 장르 선호도 분석
