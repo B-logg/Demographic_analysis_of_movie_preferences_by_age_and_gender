@@ -1,31 +1,31 @@
 # Demographic analysis of movie preferences by age and gender
 ## 1. 주제 선정 및 문제 정의
-관심분야: 영화
-핵심문제: 성별, 연령대별 영화 장르 선호도 분석
-주제배경: 영화 관람을 즐기는 사람들의 성별, 연령대는 모두 다르고, 이들은 서로 다른 취향을 가진다. 이는 영화 장르 선호도에 영향을 미친다. 
-목적: 성별, 연령대별로 영화장르 선호도를 분석하고, 이에 대한 인사이트를 도출한다.
-기대효과: 성별, 연령대별 영화 장르 선호도를 분석함으로써, 여러 플랫폼에서 사용자화된 영화 추천 또는 마케팅 전략으로 활용될 수 있다. 
+관심분야: 영화<br>
+핵심문제: 성별, 연령대별 영화 장르 선호도 분석<br>
+주제배경: 영화 관람을 즐기는 사람들의 성별, 연령대는 모두 다르고, 이들은 서로 다른 취향을 가진다. 이는 영화 장르 선호도에 영향을 미친다. <br>
+목적: 성별, 연령대별로 영화장르 선호도를 분석하고, 이에 대한 인사이트를 도출한다.<br>
+기대효과: 성별, 연령대별 영화 장르 선호도를 분석함으로써, 여러 플랫폼에서 사용자화된 영화 추천 또는 마케팅 전략으로 활용될 수 있다. <br>
 
 ## 2. 데이터베이스 설계
 1. 사용자 테이블(User)
-user_id(PK), gender(VARCHAR, choice = {Male, Female}, NOT NULL), age_id(FK), birth_of_year(INTEGER), name(VARCHAR)의 속성으로 구성되며, CHECK(birth_of_year BETWEEN 1900 AND 2020) 제약을 걸어준다. 한 명의 사용자는 하나의 연령대에 속하고, 하나의 연령대는 여러 명의 사용자가 속할 수 있다.(사용자, 연령대 N:1)
+user_id(PK), gender(VARCHAR, choice = {Male, Female}, NOT NULL), age_id(FK), birth_of_year(INTEGER), name(VARCHAR)의 속성으로 구성되며, CHECK(birth_of_year BETWEEN 1900 AND 2020) 제약을 걸어준다. 한 명의 사용자는 하나의 연령대에 속하고, 하나의 연령대는 여러 명의 사용자가 속할 수 있다.(사용자, 연령대 N:1)<br>
 2. 연령대 테이블(AgeRange)
 age_id(PK), age_range(VARCHAR, UNIQUE)의 속성으로 구성되며, CHECK(age_range in (5-11, 11-14, 15-18, 19-29, 30-39, 40-49, 50-59, 60-69, 70-79, 80-89, 90-100, 100-))
 제약을 걸어준다. 
-연령대 테이블은 사용자와 1:N 관계이다. 
+연령대 테이블은 사용자와 1:N 관계이다. <br>
 3. 영화 테이블(Movie)
 movie_id(PK), title(VARCHAR, UNIQUE, NOT NULL), release_date(VARCHAR), director(VARCHAR, NOT NULL), age_limit(VARCHAR), running_time(VARCHAR), movieInfo(VARCHAR), actor(VARCHAR)의 속성으로 구성되며, CHECK(age_limit in , = (0, 12+, 15+, 19+)) 제약을 걸어준다. age_limit은 영화 나이제한을 의미하며, 0은 나이제한이 없음을 의미한다. 
-<테이블 간 관계는 이후 설명>
+<테이블 간 관계는 이후 설명><br>
 4. 영화 장르 테이블(Genre)
 genre_id(PK), genreName(VARCHAR, UNIQUE, NOT NULL), information(VARCHAR)
 의 속성으로 구성된다. 
-<테이블 간 관계는 이후 설명>
+<테이블 간 관계는 이후 설명><br>
 5. 영화 장르 관계 테이블(MovieGenre)
 genre_id(FK), movie_id(FK), (genre_id, movie_id)(PK)의 속성으로 구성되며, 영화 테이블과 장르 테이블 간의 관계를 나타내는 테이블이다.
 영화는 여러 개의 장르를 가질 수 있고, 장르는 여러 개의 영화에 속할 수 있다.
-즉, 영화 테이블과 장르 테이블은 N:M 관계를 가진다. 
+즉, 영화 테이블과 장르 테이블은 N:M 관계를 가진다. <br>
 6. 영화 평점 관계 테이블(MovieRating)
-user_id(FK), movie_id(FK), {user_id, movie_id}(PK) rating(DECIMAL(2, 1), NOT NULL), watched_date(VARCHAR), until_the_end(Boolean), review(VARCHAR)의 속성으로 구성되며, key 이외의 속성은 관계 테이블이 가지는 속성들이다. (시청 날짜, 끝까지 영화를 시청했는지 여부, 사용자가 남긴 리뷰). 이는 영화와 영화 평점 사이의 관계를 나타내는 테이블이다. 즉, 사용자가 평가한 평점이 기록되는 테이블이다. CHECK(rating ≥ 0.0 AND rating ≤ 5.0)와 같이 평점은 0~5로 제한한다. 한 명의 사용자는 여러 개의 영화에 대한 평가를 남길 수 있고, 하나의 영화는 여러 명의 사용자에게 평가 받을 수 있다. 즉 사용자의 평가와 영화는 N:M 관계이다. 
+user_id(FK), movie_id(FK), {user_id, movie_id}(PK) rating(DECIMAL(2, 1), NOT NULL), watched_date(VARCHAR), until_the_end(Boolean), review(VARCHAR)의 속성으로 구성되며, key 이외의 속성은 관계 테이블이 가지는 속성들이다. (시청 날짜, 끝까지 영화를 시청했는지 여부, 사용자가 남긴 리뷰). 이는 영화와 영화 평점 사이의 관계를 나타내는 테이블이다. 즉, 사용자가 평가한 평점이 기록되는 테이블이다. CHECK(rating ≥ 0.0 AND rating ≤ 5.0)와 같이 평점은 0~5로 제한한다. 한 명의 사용자는 여러 개의 영화에 대한 평가를 남길 수 있고, 하나의 영화는 여러 명의 사용자에게 평가 받을 수 있다. 즉 사용자의 평가와 영화는 N:M 관계이다. <br><br>
 
 정규화 선택 이유: 3NF 선택, 테이블 내의 중복성을 최소화 하였고, 테이블 별 각 속성들을 해당 테이블의 primary key에 종속시켜, 종속성 보존을 하였다. 각 테이블의 속성들을 하나의 primary key로 식별되게 만들어 관리 효율을 좋게 설계하였다.
 
